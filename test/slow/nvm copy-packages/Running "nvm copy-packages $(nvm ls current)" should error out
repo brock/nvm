@@ -5,8 +5,12 @@ die () { echo $@ ; exit 1; }
 . ../../../nvm.sh
 
 EXPECTED_MSG="Can not copy packages from the current version of node."
-[ "$(nvm use 0.10.28 && nvm copy-packages 0.10.28 2&>1 | tail -n1)" = "$EXPECTED_MSG" ] || die '"nvm use 0.10.28 && nvm copy-packages 0.10.28" did not fail with the right message'
 
-$(nvm use 0.10.28 && nvm copy-packages 0.10.28)
+nvm use 0.10.28 > /dev/null
+
+ACTUAL_MSG="$(nvm copy-packages 0.10.28 2&>1)"
+
 [ $? = 2 ] || die '"nvm use 0.10.28 && nvm copy-packages 0.10.28" did not fail with the right error code'
+
+[ "~$ACTUAL_MSG" = "~$EXPECTED_MSG" ] || die "'nvm use 0.10.28 && nvm copy-packages 0.10.28' did not fail with the right message: '$ACTUAL_MESSAGE'"
 
